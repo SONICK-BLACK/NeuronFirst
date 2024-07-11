@@ -5,15 +5,19 @@ class DataNeouron :
 {
 public:
 
-	int SizeNeuron1=3;
-	int SizeNeuron2=2;
-	int SizeNeuron3=1;
-	int SizeWeight1 = SizeNeuron1 * SizeNeuron2;;
-	int SizeWeight2 = SizeNeuron2 * SizeNeuron3;;
+	int SizeNeuron1= 784;
+	int SizeNeuron2= 392;
+	int SizeNeuron3=10;
+	int SizeWeight1 = SizeNeuron1 * SizeNeuron2;
+	int SizeWeight2 = SizeNeuron2 * SizeNeuron3;
 	double* Neuron1 = new double[SizeNeuron1];
 	double* Neuron2 = new double[SizeNeuron2];
 	double* Neuron3 = new double[SizeNeuron3];
 	double* Weight1 = new double[SizeWeight1];
+	//double* Offsets1 = new double[SizeWeight1];
+	//double* Offsets2 = new double[SizeWeight1];
+	double* Offsets1 = new double[SizeNeuron2];
+	double* Offsets2 = new double[SizeNeuron3];
 	double* Weight2 = new double[SizeWeight2];
 	
 	//Создаем дополнительные массивы, для легкого вычисления производных
@@ -53,6 +57,8 @@ DataNeouron() {
 	delete[] Neuron3;
 	delete[] Weight1;
 	delete[] Weight2;
+	delete[] Offsets1;
+	delete[] Offsets2;
 	delete[] NoActivateNeuron2;
 	delete[] NoActivateNeuron3;
 	
@@ -60,14 +66,30 @@ DataNeouron() {
 //Рандомайзер
 void RandWeight(double randStartWeight, double randEndtWeight, int max_rand=1000) {
 	for (int i = 0; i < SizeWeight1; i++) {
-		Weight1[i] = randStartWeight + (randEndtWeight - randStartWeight)* (rand() % max_rand) / max_rand;;
+		Weight1[i] = randStartWeight + (randEndtWeight - randStartWeight)* (rand() % max_rand) / max_rand;
+		//Weight1[i] = 0.01;
+	//	cout<< Weight1[i] << "\n";
 
 	}
 	for (int j = 0; j < SizeWeight2; j++) {
-		Weight2[j] = randStartWeight + (randEndtWeight - randStartWeight) * (rand() % max_rand) / max_rand;;
+		Weight2[j] = randStartWeight + (randEndtWeight - randStartWeight) * (rand() % max_rand) / max_rand;
+	//	Weight2[j] = 0.01;
+		//cout<< Weight2[j] << "\n";
+	}
+	}
+void RandOffsets(double randStartOffsets, double randEndtOffsets, int max_rand = 1000) {
+	for (int i = 0; i < SizeNeuron2; i++) {
+		Offsets1[i] = randStartOffsets + (randEndtOffsets - randStartOffsets) * (rand() % max_rand) / max_rand;;
+	//	Offsets1[i] = 0.01;
+		//cout << Offsets1[i] << "\n";
 
 	}
+	for (int j = 0; j < SizeNeuron3; j++) {
+		Offsets2[j] = randStartOffsets + (randEndtOffsets - randStartOffsets) * (rand() % max_rand) / max_rand;;
+		//Offsets2[j] = 0.01;
+		//cout << Offsets2[j] << "\n";
 	}
+}
 //Загрузка 1 слоя
 void loadOneSloy(double* Data) {
 	for (int y = 0; y < SizeNeuron1; y++) {
@@ -78,10 +100,13 @@ void loadOneSloy(double* Data) {
 //Прямое распростронения
 void StartDirect() {
 	
-	directDirection(Neuron1, Neuron2, Weight1, NoActivateNeuron2, SizeNeuron1, SizeNeuron2);
-	directDirection(Neuron2, Neuron3, Weight2, NoActivateNeuron3, SizeNeuron2, SizeNeuron3);
+	directDirection(Neuron1, Neuron2, Weight1, Offsets1, NoActivateNeuron2, SizeNeuron1, SizeNeuron2,1);
+	///for (int i = 0; i < SizeNeuron2; i++) {
+	//	cout << Neuron2[i]<<"\n";
+	//}
+	directDirection(Neuron2, Neuron3, Weight2, Offsets2, NoActivateNeuron3, SizeNeuron2, SizeNeuron3,2);
 	//Выводим значения выходного слоя, в примере у нас 1 выходной слой
-	cout << Neuron3[0]<<"\n";
+	//cout << Neuron3[0]<<"\n";
 
 }
 //Обучение слоев
@@ -99,11 +124,21 @@ void StartTraining(double* VectorRight) {
 	//Вычисляем ошибку выходного слоя
 	 EvalutionError(VectorRight, Neuron3, VectorError, SizeNeuron3);
 	//Вычисляем ошибку внешнего слоя
-	 EvalutionErrorLast(VectorError, Weight2, NoActivateNeuron3, VectorError2, SizeNeuron3, SizeNeuron2);
-	//Обратное распространение ошибки
-	 ErorrTeachSloy(VectorError, Neuron2, NoActivateNeuron3, Weight2, SizeNeuron2, SizeNeuron3);
 	
-	 ErorrTeachSloy(VectorError2, Neuron1, NoActivateNeuron2, Weight1, SizeNeuron1, SizeNeuron2);
+	 
+	 
+	 EvalutionErrorLast(VectorError, Weight2, NoActivateNeuron3, VectorError2, SizeNeuron3, SizeNeuron2,2);
+	//Обратное распространение ошибки
+
+
+
+
+
+
+
+	 ErorrTeachSloy(VectorError, Neuron2, NoActivateNeuron3, Weight2, Offsets2, SizeNeuron2,  SizeNeuron3,2);
+	
+	 ErorrTeachSloy(VectorError2, Neuron1, NoActivateNeuron2, Weight1, Offsets1, SizeNeuron1, SizeNeuron2,1);
 	
 	 delete[] VectorError;
 	 

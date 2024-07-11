@@ -129,12 +129,14 @@
   <ItemGroup>
     <ClCompile Include="Activate.cpp" />
     <ClCompile Include="DataNeouron.cpp" />
+    <ClCompile Include="loadDat.cpp" />
     <ClCompile Include="NeouronSloy.cpp" />
     <ClCompile Include="NeuronFirst.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Activate.h" />
     <ClInclude Include="DataNeouron.h" />
+    <ClInclude Include="loadDat.h" />
     <ClInclude Include="NeouronSloy.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
