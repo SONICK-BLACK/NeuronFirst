@@ -54,41 +54,38 @@ int main()
    return 0; */ 
 
    setlocale(LC_ALL, "");
-    loadDat Data(1000);
+    loadDat Data(1000); //Инцилизируем класс, вводим сколько выборок хотим счетать.
     DataNeouron Ner;
-    double VectorsRight[10];
-    Ner.RandWeight(-0.08, 0.08);
-    Ner.RandOffsets(-0.1, 0.1);
-   Data.loadFile("lib_MNIST_edit.txt");
-   for (int i = 0; i < Data.NumberCol; i++) {
-    //   cout << "ВЫБОРКА..." << i << "\n";
+    double VectorsRight[10];//Вектор верных ответов
+    Ner.RandWeight(-0.08, 0.08);//рандомно выбираем весы
+    Ner.RandOffsets(-0.1, 0.1);//рандомно выбираем смещения
+   Data.loadFile("lib_MNIST_edit.txt");//начинаем считать датасет обучения по выборкам которые выбрали в конструкторе класса
+   for (int i = 0; i < Data.NumberCol; i++) { //Проходимся по всем выборкам
 
 
-       Ner.loadOneSloy(Data.Vectors[i]);
-       Ner.StartDirect();
-     //  cout << "Нейроны выходов...";
-     //  for (int j = 0; j < 10; j++)
-    //  cout<< Ner.Neuron3[j]<<" ";
-    //   cout << "\n";
-       ///// Инцилизация вектора правильных ответов
-     //  cout << "Вектор правильных ответов...";
+       Ner.loadOneSloy(Data.Vectors[i]);///Загружаем данные в 1 слой
+       Ner.StartDirect(); //Делаем прямое распространение
+   
+       //Заполняем вектор правильных ответов
        for (int j = 0; j < 10; j++) {
            VectorsRight[j]=0;
            if (j == Data.numbers[i]) {
                VectorsRight[Data.numbers[i]] = 1;
            }
-    //       cout << VectorsRight[j] << " ";
+  
 
        }  
+       //Просто на каждых 1000 прогонок выводим что-то.
        if (i == 1000) {
            cout <<"1" << "\n";
        }
-    //   cout << "\n";
+   
        /////
        bool F=true;
        int k = 0;
+       //Цикл эпох
        while (F) {
-           Ner.StartTraining(VectorsRight);
+           Ner.StartTraining(VectorsRight); //Обучаем слои
            Ner.StartDirect();
         
 
@@ -116,7 +113,8 @@ int main()
   
    cout << "Обучение закончилось...." << "\n";
    cout << "Тестовые значения...." << "\n";
-
+   
+   ///Здесь начинам прогонять тестовые значения после обучения слоя.
    loadDat Data1(1000);
    Data.loadFile("lib_10k.txt");
    for (int i = 0; i < Data1.NumberCol; i++) {
@@ -129,7 +127,7 @@ int main()
    }
 
 
-   ////////////Более оптимальная функция сигмоида. Тангенс не тестировал
+  
    
 }
 

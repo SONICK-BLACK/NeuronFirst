@@ -6,14 +6,14 @@ class loadDat
 	
 {
 public:
-	/// 60000
+	
 	
 	
 	int NumberCol;
 	int pixels=784;
 
-	int* numbers;// = new int[NumberCol];
-		double** Vectors; //= new double* [NumberCol];
+	int* numbers;
+		double** Vectors; 
 		loadDat(int NumberCol1) {
 			NumberCol = NumberCol1;
 			numbers = new int[NumberCol];
@@ -37,7 +37,7 @@ public:
 		ifstream f;
 		f.open(path);
 		if (!f.is_open()) {
-			cout << "Ошибка чтения файла\n";
+			cout << "File reading error\n";
 			system("pause");
 		}
 		for (int i = 0; i < NumberCol; i++) {
@@ -47,7 +47,7 @@ public:
 			}
 		}
 		f.close();
-		cout << "Конец чтения файла\n";
+		cout << "End of file reading\n";
 	}
 };
 

@@ -14,20 +14,18 @@ public:
 	double* Neuron2 = new double[SizeNeuron2];
 	double* Neuron3 = new double[SizeNeuron3];
 	double* Weight1 = new double[SizeWeight1];
-	//double* Offsets1 = new double[SizeWeight1];
-	//double* Offsets2 = new double[SizeWeight1];
 	double* Offsets1 = new double[SizeNeuron2];
 	double* Offsets2 = new double[SizeNeuron3];
 	double* Weight2 = new double[SizeWeight2];
 	
-	//Создаем дополнительные массивы, для легкого вычисления производных
+	//Creating additional arrays for easy calculation of derivatives
 		double* NoActivateNeuron2 = new double[SizeNeuron2];
 		double* NoActivateNeuron3 = new double[SizeNeuron3];
 
 	
 	
 public: 
-	// Инцилизация
+	
 DataNeouron() {
 	
 	for (int i = 0; i < SizeNeuron2; i++) {
@@ -45,13 +43,13 @@ DataNeouron() {
 
 
 		
-		cout << "Инциализация в Data" << "\n";
+		
 }
 
 
 ~DataNeouron() {
 	
-	cout << "удаление....";
+	cout << "Delete....";
 	delete[] Neuron1;
 	delete[] Neuron2;
 	delete[] Neuron3;
@@ -63,53 +61,47 @@ DataNeouron() {
 	delete[] NoActivateNeuron3;
 	
 }
-//Рандомайзер
+//Randomizer
 void RandWeight(double randStartWeight, double randEndtWeight, int max_rand=1000) {
 	for (int i = 0; i < SizeWeight1; i++) {
 		Weight1[i] = randStartWeight + (randEndtWeight - randStartWeight)* (rand() % max_rand) / max_rand;
-		//Weight1[i] = 0.01;
-	//	cout<< Weight1[i] << "\n";
+	
 
 	}
 	for (int j = 0; j < SizeWeight2; j++) {
 		Weight2[j] = randStartWeight + (randEndtWeight - randStartWeight) * (rand() % max_rand) / max_rand;
-	//	Weight2[j] = 0.01;
-		//cout<< Weight2[j] << "\n";
+	
 	}
 	}
 void RandOffsets(double randStartOffsets, double randEndtOffsets, int max_rand = 1000) {
 	for (int i = 0; i < SizeNeuron2; i++) {
 		Offsets1[i] = randStartOffsets + (randEndtOffsets - randStartOffsets) * (rand() % max_rand) / max_rand;;
-	//	Offsets1[i] = 0.01;
-		//cout << Offsets1[i] << "\n";
+
 
 	}
 	for (int j = 0; j < SizeNeuron3; j++) {
 		Offsets2[j] = randStartOffsets + (randEndtOffsets - randStartOffsets) * (rand() % max_rand) / max_rand;;
-		//Offsets2[j] = 0.01;
-		//cout << Offsets2[j] << "\n";
+	
 	}
 }
-//Загрузка 1 слоя
+//Loading 1 layer
 void loadOneSloy(double* Data) {
 	for (int y = 0; y < SizeNeuron1; y++) {
 		Neuron1[y] = Data[y];
 	}
 
 }
-//Прямое распростронения
+//Direct distribution
 void StartDirect() {
 	
 	directDirection(Neuron1, Neuron2, Weight1, Offsets1, NoActivateNeuron2, SizeNeuron1, SizeNeuron2,1);
-	///for (int i = 0; i < SizeNeuron2; i++) {
-	//	cout << Neuron2[i]<<"\n";
-	//}
+	
 	directDirection(Neuron2, Neuron3, Weight2, Offsets2, NoActivateNeuron3, SizeNeuron2, SizeNeuron3,2);
-	//Выводим значения выходного слоя, в примере у нас 1 выходной слой
-	//cout << Neuron3[0]<<"\n";
+	
+	
 
 }
-//Обучение слоев
+//Layer Training
 void StartTraining(double* VectorRight) {
 
 	double* VectorError = new double[SizeNeuron3];
@@ -121,14 +113,14 @@ void StartTraining(double* VectorRight) {
 		VectorError2[j] = 0;
 	}
 
-	//Вычисляем ошибку выходного слоя
+	//Calculating the error of the output layer
 	 EvalutionError(VectorRight, Neuron3, VectorError, SizeNeuron3);
-	//Вычисляем ошибку внешнего слоя
+	//Calculating the error of the outer layer
 	
 	 
 	 
 	 EvalutionErrorLast(VectorError, Weight2, NoActivateNeuron3, VectorError2, SizeNeuron3, SizeNeuron2,2);
-	//Обратное распространение ошибки
+	//Back propagation of the error
 
 
 
